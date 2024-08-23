@@ -1,4 +1,4 @@
-from products import Product
+from products import Product, LimitedProduct
 from store import Store
 
 # setup initial stock of inventory
@@ -21,6 +21,7 @@ def make_order(store: Store) -> list[tuple[Product, int]]:
     response = "valid"
     current_sku = 0
     order_list = []
+    limited_items = {}
 
     while (response != ""):
         sku = 0
@@ -57,6 +58,15 @@ def make_order(store: Store) -> list[tuple[Product, int]]:
         if quantity > product.get_quantity():
             print("Not enough items in stock")
             continue
+
+        if type(product) is LimitedProduct:
+            if not sku in limited_items:
+                limited_items[sku] = product.maximum
+            elif quantity > limited_items[sku]:
+                print(f"Cannot purchase any more of this product")
+                continue
+            else:
+                limited_items[sku] = limited_items[sku] - quantity
 
         order_list.append((store.products[sku - 1], quantity))
         print("Product added to cart!")
