@@ -30,8 +30,9 @@ class Product:
         return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
     
     def buy(self, quantity) -> float:
-        if (quantity > self.quantity):
-            raise ValueError("Not enough items in stock")
-        
         self.quantity = max(self.quantity - quantity, 0)
+        
+        if self.quantity <= 0:
+            self.deactivate()
+        
         return self.price * quantity

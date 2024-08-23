@@ -52,6 +52,12 @@ def make_order(store: Store) -> list[tuple[Product, int]]:
 
         quantity = max(int(quantity_str), 0)
 
+        product = store.products[sku - 1]
+
+        if quantity > product.get_quantity():
+            print("Not enough items in stock")
+            continue
+
         order_list.append((store.products[sku - 1], quantity))
         print("Product added to cart!")
         current_sku = 0
