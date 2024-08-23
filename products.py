@@ -1,10 +1,3 @@
-from enum import Enum
-
-class ProductType(Enum):
-    Basic = 1
-    NonStocked = 2
-    Limited = 3
-
 class Product:
     def __init__(self, name="", price=0.0, quantity=1) -> None:
         if (len(name) < 1):
@@ -14,7 +7,6 @@ class Product:
         self.name = name
         self.price = price
         self.active = True
-        self.product_type = ProductType.Basic
 
     def __del__(self) -> None:
         pass
@@ -48,7 +40,6 @@ class Product:
 class NonStockedProduct(Product):
     def __init__(self, name="", price=0, quantity=1) -> None:
         super().__init__(name, price, 0)
-        self.product_type = ProductType.NonStocked
 
     def set_quantity(self, quantity) -> None:
         pass
@@ -63,7 +54,6 @@ class LimitedProduct(Product):
     def __init__(self, name="", price=0, quantity=1, maximum=1) -> None:
         super().__init__(name, price, quantity)
         self.maximum = maximum
-        self.product_type = ProductType.Limited
 
     def show(self) -> str:
         return f"{self.name}, Price: {self.price}, Limited to 1 per order!"
