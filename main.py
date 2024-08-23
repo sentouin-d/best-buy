@@ -52,7 +52,7 @@ def make_order(store: Store) -> list[tuple[Product, int]]:
 
         quantity = max(int(quantity_str), 0)
 
-        order_list.append((store.products[sku], quantity))
+        order_list.append((store.products[sku - 1], quantity))
         print("Product added to cart!")
         current_sku = 0
 
