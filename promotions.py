@@ -6,19 +6,19 @@ class Promotion(ABC):
         pass
 
 class PercentageDiscount(Promotion):
-    def __init__(self, percentage=1.0) -> None:
+    def __init__(self, percentage=100) -> None:
         self.percentage = percentage
-        self.title = f"{percentage * 100}% off!"
+        self.title = f"{percentage}% off!"
 
     def apply_promotion(self, quantity) -> float:
-        return self.percentage
+        return (100 - self.percentage) / 100
     
 class SecondHalfPrice(Promotion):
     def __init__(self) -> None:
         self.title = "Second at Half Price!"
 
     def apply_promotion(self, quantity) -> float:
-        return (quantity - 0.5) / quantity if quantity > 1 else 1.0
+        return ((quantity - 0.5) / quantity) if quantity > 1 else 1.0
     
 class SecondOneFree(Promotion):
     def __init__(self) -> None:

@@ -31,7 +31,7 @@ class Product:
         self.active = False
 
     def show(self) -> str:
-        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
+        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}, {self.get_promotions_display()}"
     
     def buy(self, quantity) -> float:
         self.quantity = max(self.quantity - quantity, 0)
@@ -39,9 +39,12 @@ class Product:
         if self.quantity <= 0:
             self.deactivate()
 
-        total_discount = math.prod([prom.apply_promotion(self.quantity) for prom in self.promotions]) if len(self.promotions) > 0 else 1
+        total_discount = math.prod([prom.apply_promotion(quantity) for prom in self.promotions]) if len(self.promotions) > 0 else 1
 
         return self.price * quantity * total_discount
+    
+    def get_promotions_display(self) -> str:
+        return ", ".join([prom.title for prom in self.promotions])
     
 class NonStockedProduct(Product):
     def __init__(self, name="", price=0, quantity=1) -> None:
@@ -54,7 +57,7 @@ class NonStockedProduct(Product):
         pass
 
     def show(self) -> str:
-        return f"{self.name}, Price: {self.price}, Quantity: Unlimited"
+        return f"{self.name}, Price: {self.price}, Quantity: Unlimited, {self.get_promotions_display()}"
 
 class LimitedProduct(Product):
     def __init__(self, name="", price=0, quantity=1, maximum=1) -> None:
@@ -62,5 +65,4 @@ class LimitedProduct(Product):
         self.maximum = maximum
 
     def show(self) -> str:
-        promotions_display = ", ".join([prom.title for prom in self.promotions])
-        return f"{self.name}, Price: {self.price}, Limited to 1 per order!, {promotions_display}"
+        return f"{self.name}, Price: {self.price}, Limited to 1 per order!, {self.get_promotions_display()}"

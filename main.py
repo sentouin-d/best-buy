@@ -1,10 +1,16 @@
 from products import Product, LimitedProduct
+from promotions import PercentageDiscount, SecondHalfPrice, SecondOneFree
 from store import Store
 
+# Create promotion catalog
+second_half_price = SecondHalfPrice()
+second_one_free = SecondOneFree()
+thirty_percent = PercentageDiscount(30)
+
 # setup initial stock of inventory
-product_list = [ Product("MacBook Air M2", price=1450, quantity=100),
-                 Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                 Product("Google Pixel 7", price=500, quantity=250)
+product_list = [ Product("MacBook Air M2", price=1450, quantity=100, promotions=[second_half_price]),
+                 Product("Bose QuietComfort Earbuds", price=250, quantity=500, promotions=[second_one_free]),
+                 Product("Google Pixel 7", price=500, quantity=250, promotions=[thirty_percent])
                ]
 best_buy = Store(product_list)
 
@@ -36,7 +42,7 @@ def make_order(store: Store) -> list[tuple[Product, int]]:
                 continue
 
             sku = int(sku_str)
-            if sku < 1 or sku >= len(store.products):
+            if sku < 1 or sku > len(store.products):
                 print("Invalid sku")
                 continue
 
