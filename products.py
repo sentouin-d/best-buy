@@ -1,5 +1,8 @@
+from promotions import Promotion
+import math
+
 class Product:
-    def __init__(self, name="", price=0.0, quantity=1) -> None:
+    def __init__(self, name="", price=0.0, quantity=1, promotions:list[Promotion]=[]) -> None:
         if (len(name) < 1):
             raise ValueError("Empty name")
 
@@ -7,6 +10,7 @@ class Product:
         self.name = name
         self.price = price
         self.active = True
+        self.promotions = promotions
 
     def __del__(self) -> None:
         pass
@@ -34,8 +38,10 @@ class Product:
         
         if self.quantity <= 0:
             self.deactivate()
-        
-        return self.price * quantity
+
+        total_discount = math.prod([prom.apply_promotion(self.quantity) for prom in self.promotions]) if len(self.promotions) > 0 else 1
+
+        return self.price * quantity * total_discount
     
 class NonStockedProduct(Product):
     def __init__(self, name="", price=0, quantity=1) -> None:
@@ -56,4 +62,5 @@ class LimitedProduct(Product):
         self.maximum = maximum
 
     def show(self) -> str:
-        return f"{self.name}, Price: {self.price}, Limited to 1 per order!"
+        promotions_display = ", ".join([prom.title for prom in self.promotions])
+        return f"{self.name}, Price: {self.price}, Limited to 1 per order!, {promotions_display}"
